@@ -28,6 +28,12 @@ export const Navbar: React.FC = () => {
     audio.loop = true;
     audio.volume = 1.0;
     audioRef.current = audio;
+    audio.play().then(() => setPlaying(true)).catch(() => {
+      const resume = () => {
+        audio.play().then(() => { setPlaying(true); document.removeEventListener('click', resume); });
+      };
+      document.addEventListener('click', resume);
+    });
     return () => { audio.pause(); audio.src = ''; };
   }, []);
 

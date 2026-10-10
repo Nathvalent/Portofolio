@@ -58,38 +58,28 @@ const ParticleNetwork: React.FC = () => {
     canvas.addEventListener('mouseleave', onMouseLeave);
     return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', init); canvas.removeEventListener('mousemove', onMouseMove); canvas.removeEventListener('mouseleave', onMouseLeave); };
   }, []);
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />;
 };
 
 const CONTACT_ITEMS = [
-  {
-    label: 'EMAIL',
-    value: 'nathanael.valent@gmail.com',
-    icon: Mail,
-    href: 'mailto:nathanael.valent@gmail.com',
-    copyable: true,
-  },
-  {
-    label: 'GITHUB',
-    value: 'github.com/nathanaelvalent',
-    icon: Github,
-    href: 'https://github.com/Nathvalent',
-    copyable: false,
-  },
-  {
-    label: 'LINKEDIN',
-    value: 'linkedin.com/in/nathanael-valent',
-    icon: Linkedin,
-    href: 'https://www.linkedin.com/in/nathanael-valent-127995370/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B9u5%2F0B%2FSTIS%2BCrQHNRkwEQ%3D%3D',
-    copyable: false,
-  },
-  {
-    label: 'INSTAGRAM',
-    value: 'instagram.com/nathvallent',
-    icon: Instagram,
-    href: 'https://www.instagram.com/nathvallent/',
-    copyable: false,
-  },
+  { label: 'EMAIL', value: 'nathanael.valent@gmail.com', icon: Mail, href: 'mailto:nathanael.valent@gmail.com', copyable: true },
+  { label: 'GITHUB', value: 'github.com/nathanaelvalent', icon: Github, href: 'https://github.com/Nathvalent', copyable: false },
+  { label: 'LINKEDIN', value: 'linkedin.com/in/nathanael-valent', icon: Linkedin, href: 'https://www.linkedin.com/in/nathanael-valent-127995370/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B9u5%2F0B%2FSTIS%2BCrQHNRkwEQ%3D%3D', copyable: false },
+  { label: 'INSTAGRAM', value: 'instagram.com/nathvallent', icon: Instagram, href: 'https://www.instagram.com/nathvallent/', copyable: false },
+];
+
+const SOCIAL_LINKS = [
+  { icon: Mail, href: 'mailto:nathanael.valent@gmail.com' },
+  { icon: Linkedin, href: 'https://www.linkedin.com/in/nathanael-valent-127995370/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B9u5%2F0B%2FSTIS%2BCrQHNRkwEQ%3D%3D' },
+  { icon: Github, href: 'https://github.com/Nathvalent' },
+  { icon: Instagram, href: 'https://www.instagram.com/nathvallent/' },
+];
+
+const CONNECT_LINKS = [
+  { label: 'Direct Mail', href: 'mailto:nathanael.valent@gmail.com' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nathanael-valent-127995370/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B9u5%2F0B%2FSTIS%2BCrQHNRkwEQ%3D%3D' },
+  { label: 'GitHub', href: 'https://github.com/Nathvalent' },
+  { label: 'Instagram', href: 'https://www.instagram.com/nathvallent/' },
 ];
 
 export const ContactSection: React.FC = () => {
@@ -104,8 +94,9 @@ export const ContactSection: React.FC = () => {
   return (
     <section id="contact" className="relative z-10 w-full overflow-hidden">
       <ParticleNetwork />
+
       {/* Contact Hero */}
-      <div className="w-full max-w-[1600px] mx-auto px-6 md:px-16 lg:px-20 py-24 md:py-36">
+      <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 md:px-16 lg:px-20 py-24 md:py-36">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left */}
           <motion.div
@@ -122,7 +113,6 @@ export const ContactSection: React.FC = () => {
               Available for bespoke UI/UX systems, high-performance web development,
               brand direction, and creative multimedia commissions worldwide.
             </p>
-
           </motion.div>
 
           {/* Right — Contact Cards */}
@@ -138,21 +128,22 @@ export const ContactSection: React.FC = () => {
                 key={label}
                 className="flex items-center justify-between px-5 py-5 bg-[#0f0f0f] border border-neutral-800 rounded-xl hover:border-neutral-600 transition-colors group"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center bg-neutral-900 rounded-lg border border-neutral-800">
-                    <Icon className="w-4.5 h-4.5 text-white" />
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="w-10 h-10 shrink-0 flex items-center justify-center bg-neutral-900 rounded-lg border border-neutral-800">
+                    <Icon className="w-4 h-4 text-white" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <span className="font-mono-code text-[10px] text-neutral-500 tracking-[0.22em] uppercase block mb-0.5">
                       {label}
                     </span>
-                    <span className="font-mono-code text-sm text-white">{value}</span>
+                    <span className="font-mono-code text-xs sm:text-sm text-white truncate block">{value}</span>
                   </div>
                 </div>
                 {copyable ? (
                   <button
                     onClick={() => handleCopy(value)}
-                    className="text-neutral-500 hover:text-white transition-colors cursor-pointer"
+                    style={{ touchAction: 'manipulation' }}
+                    className="ml-3 p-2 shrink-0 text-neutral-500 hover:text-white transition-colors cursor-pointer"
                     aria-label="Copy email"
                   >
                     {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -162,7 +153,9 @@ export const ContactSection: React.FC = () => {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-white transition-colors"
+                    style={{ touchAction: 'manipulation' }}
+                    className="ml-3 p-2 shrink-0 text-neutral-500 hover:text-white transition-colors"
+                    aria-label={label}
                   >
                     <ArrowUpRight className="w-4 h-4" />
                   </a>
@@ -174,10 +167,10 @@ export const ContactSection: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer className="w-full border-t border-neutral-900">
-        <div className="w-full max-w-[1600px] mx-auto px-6 md:px-16 lg:px-20 py-16 grid grid-cols-1 md:grid-cols-4 gap-12">
+      <footer className="relative z-10 w-full border-t border-neutral-900">
+        <div className="w-full max-w-[1600px] mx-auto px-6 md:px-16 lg:px-20 py-12 md:py-16 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {/* Brand */}
-          <div className="md:col-span-1">
+          <div className="col-span-2 md:col-span-1">
             <p className="font-sans font-extrabold text-xl tracking-[0.2em] text-white mb-1">
               NVD<span className="text-neutral-400">.</span>
             </p>
@@ -200,6 +193,7 @@ export const ContactSection: React.FC = () => {
                       const el = document.getElementById(id);
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
+                    style={{ touchAction: 'manipulation' }}
                     className="text-neutral-400 hover:text-white font-sans text-sm transition-colors capitalize cursor-pointer"
                   >
                     {id.charAt(0).toUpperCase() + id.slice(1)}
@@ -223,17 +217,13 @@ export const ContactSection: React.FC = () => {
           <div>
             <p className="font-mono-code text-[10px] text-neutral-500 tracking-[0.22em] uppercase mb-5">CONNECT</p>
             <ul className="space-y-3 mb-6">
-              {[
-                { label: 'Direct Mail', href: 'mailto:nathanael.valent@gmail.com' },
-                { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nathanael-valent-127995370/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B9u5%2F0B%2FSTIS%2BCrQHNRkwEQ%3D%3D' },
-                { label: 'GitHub', href: 'https://github.com/Nathvalent' },
-                { label: 'Instagram', href: 'https://www.instagram.com/nathvallent/' },
-              ].map(({ label, href }) => (
+              {CONNECT_LINKS.map(({ label, href }) => (
                 <li key={label}>
                   <a
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    style={{ touchAction: 'manipulation' }}
                     className="text-neutral-400 hover:text-white text-sm transition-colors inline-flex items-center gap-1.5"
                   >
                     {label}
@@ -242,21 +232,17 @@ export const ContactSection: React.FC = () => {
                 </li>
               ))}
             </ul>
-            <div className="flex items-center gap-2">
-              {[
-                { icon: Mail, href: 'mailto:nathanael.valent@gmail.com' },
-                { icon: Linkedin, href: 'https://www.linkedin.com/in/nathanael-valent-127995370/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3B9u5%2F0B%2FSTIS%2BCrQHNRkwEQ%3D%3D' },
-                { icon: Github, href: 'https://github.com/Nathvalent' },
-                { icon: Instagram, href: 'https://www.instagram.com/nathvallent/' },
-              ].map(({ icon: Icon, href }, i) => (
+            <div className="flex items-center gap-2 flex-wrap">
+              {SOCIAL_LINKS.map(({ icon: Icon, href }, i) => (
                 <a
                   key={i}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 flex items-center justify-center border border-neutral-800 text-neutral-500 hover:text-white hover:border-neutral-500 transition-colors rounded"
+                  style={{ touchAction: 'manipulation' }}
+                  className="w-10 h-10 flex items-center justify-center border border-neutral-800 text-neutral-500 hover:text-white hover:border-neutral-500 transition-colors rounded"
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
